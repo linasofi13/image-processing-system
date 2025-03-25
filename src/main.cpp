@@ -44,16 +44,16 @@ int main(int argc, char* argv[]) {
 
         if (!imagen.cargar()) return 1;
         imagen.mostrarInformacion();
-        imagen.invertirColores();                     // ✅ Invertir colores
-        imagen.guardarImagen(rutaSalida);             // ✅ Guardar imagen procesada
+        imagen.invertirColores();                    
+        imagen.guardarImagen(rutaSalida);             
     } else {
         cout << "[INFO] Modo seleccionado: Convencional (new/delete)" << endl;
         Imagen imagen(rutaEntrada);
 
         if (!imagen.cargar()) return 1;
         imagen.mostrarInformacion();
-        imagen.invertirColores();                     // ✅ Invertir colores
-        imagen.guardarImagen(rutaSalida);             // ✅ Guardar imagen procesada
+        imagen.invertirColores();                    
+        imagen.guardarImagen(rutaSalida);             
     }
 
     auto fin = high_resolution_clock::now();

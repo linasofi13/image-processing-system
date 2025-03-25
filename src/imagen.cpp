@@ -99,7 +99,6 @@ void Imagen::mostrarInformacion() const {
     cout << "Canales: " << canales << endl;
 }
 
-// ✅ Invierte los colores de cada píxel
 void Imagen::invertirColores() {
     for (int y = 0; y < alto; y++) {
         for (int x = 0; x < ancho; x++) {
@@ -110,7 +109,6 @@ void Imagen::invertirColores() {
     }
 }
 
-// ✅ Guarda la imagen procesada en un archivo (formato PNG)
 void Imagen::guardarImagen(const std::string& nombreArchivo) const {
     unsigned char* buffer = new unsigned char[alto * ancho * canales];
     int index = 0;
