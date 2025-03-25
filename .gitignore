@@ -1,0 +1,17 @@
+# Ignorar archivos temporales de compilación
+*.o
+*.out
+*.log
+
+# Ignorar archivos de compilación si no los necesitas
+# build/
+# resultados/
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales de editores
+*.swp
+*.swo
+*.tmp
