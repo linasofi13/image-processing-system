@@ -26,6 +26,11 @@ This project is a **C++ image processing application** that supports two modes o
 - Compare performance and allocation behavior
 - Print `offsets` when Buddy System is used (for debugging)
 
+### 📌 Part 5: Performance and Memory Consumption Comparison
+- Measure processing time for rotation and scaling operations using `std::chrono`.
+- Measure memory consumption using `mallinfo()` or `getrusage()` to determine the size of reserved memory.
+- Display on screen a direct comparison between performance and memory consumption in the two allocation modes.
+
 ## 🔬 Technical Details
 
 ### Image Scaling Implementation
@@ -127,7 +132,7 @@ The system allows direct comparison between Buddy System and conventional alloca
    - Buddy System: Lower system time due to custom allocation
    - Conventional: Higher system time due to OS memory management
 
-## �� Project Structure
+## Project Structure
 ```
 image-processing-system/
 │
