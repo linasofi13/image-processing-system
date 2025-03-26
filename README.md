@@ -20,7 +20,60 @@ This project is a **C++ image processing application** that supports two modes o
 - Compare performance and allocation behavior
 - Print `offsets` when Buddy System is used (for debugging)
 
----
+## 🔬 Technical Details
+
+### Image Scaling Implementation
+
+The image scaling function uses **bilinear interpolation** to maintain image quality during resizing. Here's how it works:
+
+#### Mathematical Concept
+For a scaling factor $s$, the new dimensions are calculated as:
+$$
+\text{new\_width} = \lfloor \text{width} \times s \rfloor \\
+\text{new\_height} = \lfloor \text{height} \times s \rfloor
+$$
+
+For each pixel in the new image at position $(x, y)$, we find its corresponding position in the original image:
+$$
+\text{orig\_x} = \frac{x}{s} \\
+\text{orig\_y} = \frac{y}{s}
+$$
+
+The bilinear interpolation uses four neighboring pixels to compute the new pixel value:
+$$
+P(x,y) = (1-dx)(1-dy)P_{00} + dx(1-dy)P_{10} + (1-dx)dyP_{01} + dx\cdot dy\cdot P_{11}
+$$
+
+Where:
+- $P_{00}, P_{10}, P_{01}, P_{11}$ are the four neighboring pixels
+- $dx, dy$ are the fractional parts of the original coordinates
+
+#### Implementation Details
+1. **Memory Allocation**:
+   - Creates a new 3D matrix for the scaled image
+   - Supports both Buddy System and conventional memory allocation
+   - Properly handles memory cleanup
+
+2. **Interpolation Process**:
+   - Maps each new pixel to its position in the original image
+   - Calculates weights for the four neighboring pixels
+   - Applies interpolation to each color channel independently
+
+3. **Edge Handling**:
+   - Uses `std::min` to prevent accessing pixels outside image boundaries
+   - Maintains color accuracy at image edges
+
+#### Example
+For a scaling factor of 2.0:
+```
+Original Image (4x4)     Scaled Image (8x8)
++--------+              +----------------+
+|  P00   |              |   P00'  P01'   |
+|  P10   |    →         |   P10'  P11'   |
++--------+              +----------------+
+```
+
+Where each new pixel (P') is calculated using the bilinear interpolation formula.
 
 ## 🔧 Project Structure
 ```
