@@ -109,6 +109,88 @@ void Imagen::invertirColores() {
     }
 }
 
+void Imagen::escalarImagen(float factor) {
+    int nuevoAncho = static_cast<int>(ancho * factor);
+    int nuevoAlto = static_cast<int>(alto * factor);
+    
+    // Crear nueva matriz para la imagen escalada
+    unsigned char*** nuevosPixeles;
+    if (allocador) {
+        nuevosPixeles = reinterpret_cast<unsigned char***>(
+            allocador->alloc(nuevoAlto * sizeof(unsigned char**))
+        );
+    } else {
+        nuevosPixeles = new unsigned char**[nuevoAlto];
+    }
+
+    // Asignar memoria para las filas y columnas
+    for (int y = 0; y < nuevoAlto; y++) {
+        if (allocador) {
+            nuevosPixeles[y] = reinterpret_cast<unsigned char**>(
+                allocador->alloc(nuevoAncho * sizeof(unsigned char*))
+            );
+        } else {
+            nuevosPixeles[y] = new unsigned char*[nuevoAncho];
+        }
+
+        for (int x = 0; x < nuevoAncho; x++) {
+            if (allocador) {
+                nuevosPixeles[y][x] = reinterpret_cast<unsigned char*>(
+                    allocador->alloc(canales * sizeof(unsigned char))
+                );
+            } else {
+                nuevosPixeles[y][x] = new unsigned char[canales];
+            }
+        }
+    }
+
+    // Realizar el escalado usando interpolación bilineal
+    for (int y = 0; y < nuevoAlto; y++) {
+        for (int x = 0; x < nuevoAncho; x++) {
+            // Calcular las coordenadas correspondientes en la imagen original
+            float origX = x / factor;
+            float origY = y / factor;
+            
+            // Obtener las coordenadas de los píxeles vecinos
+            int x1 = static_cast<int>(origX);
+            int y1 = static_cast<int>(origY);
+            int x2 = std::min(x1 + 1, ancho - 1);
+            int y2 = std::min(y1 + 1, alto - 1);
+            
+            // Calcular los pesos para la interpolación
+            float dx = origX - x1;
+            float dy = origY - y1;
+
+            // Interpolar para cada canal
+            for (int c = 0; c < canales; c++) {
+                float valor = 
+                    pixeles[y1][x1][c] * (1 - dx) * (1 - dy) +
+                    pixeles[y1][x2][c] * dx * (1 - dy) +
+                    pixeles[y2][x1][c] * (1 - dx) * dy +
+                    pixeles[y2][x2][c] * dx * dy;
+                
+                nuevosPixeles[y][x][c] = static_cast<unsigned char>(valor);
+            }
+        }
+    }
+
+    // Liberar memoria antigua si no estamos usando el allocador
+    if (!allocador) {
+        for (int y = 0; y < alto; y++) {
+            for (int x = 0; x < ancho; x++) {
+                delete[] pixeles[y][x];
+            }
+            delete[] pixeles[y];
+        }
+        delete[] pixeles;
+    }
+
+    // Actualizar los atributos de la imagen
+    pixeles = nuevosPixeles;
+    ancho = nuevoAncho;
+    alto = nuevoAlto;
+}
+
 void Imagen::guardarImagen(const std::string& nombreArchivo) const {
     unsigned char* buffer = new unsigned char[alto * ancho * canales];
     int index = 0;

@@ -12,6 +12,7 @@ public:
     void mostrarInformacion() const;
 
     void invertirColores();                     
+    void escalarImagen(float factor);  // New method for scaling
 
     void guardarImagen(const std::string& ruta) const;
 
