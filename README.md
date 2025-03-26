@@ -28,21 +28,21 @@ The image scaling function uses **bilinear interpolation** to maintain image qua
 
 #### Mathematical Concept
 For a scaling factor $s$, the new dimensions are calculated as:
-$$
+```math
 \text{new\_width} = \lfloor \text{width} \times s \rfloor \\
 \text{new\_height} = \lfloor \text{height} \times s \rfloor
-$$
+```
 
 For each pixel in the new image at position $(x, y)$, we find its corresponding position in the original image:
-$$
+```math
 \text{orig\_x} = \frac{x}{s} \\
 \text{orig\_y} = \frac{y}{s}
-$$
+```
 
 The bilinear interpolation uses four neighboring pixels to compute the new pixel value:
-$$
+```math
 P(x,y) = (1-dx)(1-dy)P_{00} + dx(1-dy)P_{10} + (1-dx)dyP_{01} + dx\cdot dy\cdot P_{11}
-$$
+```
 
 Where:
 - $P_{00}, P_{10}, P_{01}, P_{11}$ are the four neighboring pixels
