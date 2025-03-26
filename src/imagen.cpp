@@ -5,8 +5,12 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 #include <iostream>
+#include <chrono>
+#include <sys/resource.h>
+#include <malloc.h>
 
 using namespace std;
+using namespace std::chrono;
 
 // Constructor
 Imagen::Imagen(const std::string& rutaArchivo, BuddyAllocator* allocador)
@@ -100,6 +104,11 @@ void Imagen::mostrarInformacion() const {
 }
 
 void Imagen::invertirColores() {
+    auto inicio = high_resolution_clock::now();
+    struct rusage usage_before, usage_after;
+    getrusage(RUSAGE_SELF, &usage_before);
+    struct mallinfo2 mem_before = mallinfo2();
+
     for (int y = 0; y < alto; y++) {
         for (int x = 0; x < ancho; x++) {
             for (int c = 0; c < canales; c++) {
@@ -107,9 +116,27 @@ void Imagen::invertirColores() {
             }
         }
     }
+
+    auto fin = high_resolution_clock::now();
+    getrusage(RUSAGE_SELF, &usage_after);
+    struct mallinfo2 mem_after = mallinfo2();
+
+    auto duracion = duration_cast<milliseconds>(fin - inicio).count();
+    cout << "\n[INFO] Inversión de colores:" << endl;
+    cout << "  Tiempo de procesamiento: " << duracion << " ms" << endl;
+    cout << "  Memoria utilizada: " << (mem_after.uordblks - mem_before.uordblks) / 1024.0 << " KB" << endl;
+    cout << "  CPU User: " << (usage_after.ru_utime.tv_sec - usage_before.ru_utime.tv_sec) * 1000.0 +
+            (usage_after.ru_utime.tv_usec - usage_before.ru_utime.tv_usec) / 1000.0 << " ms" << endl;
+    cout << "  CPU System: " << (usage_after.ru_stime.tv_sec - usage_before.ru_stime.tv_sec) * 1000.0 +
+            (usage_after.ru_stime.tv_usec - usage_before.ru_stime.tv_usec) / 1000.0 << " ms" << endl;
 }
 
 void Imagen::escalarImagen(float factor) {
+    auto inicio = high_resolution_clock::now();
+    struct rusage usage_before, usage_after;
+    getrusage(RUSAGE_SELF, &usage_before);
+    struct mallinfo2 mem_before = mallinfo2();
+
     int nuevoAncho = static_cast<int>(ancho * factor);
     int nuevoAlto = static_cast<int>(alto * factor);
     
@@ -147,21 +174,17 @@ void Imagen::escalarImagen(float factor) {
     // Realizar el escalado usando interpolación bilineal
     for (int y = 0; y < nuevoAlto; y++) {
         for (int x = 0; x < nuevoAncho; x++) {
-            // Calcular las coordenadas correspondientes en la imagen original
             float origX = x / factor;
             float origY = y / factor;
             
-            // Obtener las coordenadas de los píxeles vecinos
             int x1 = static_cast<int>(origX);
             int y1 = static_cast<int>(origY);
             int x2 = std::min(x1 + 1, ancho - 1);
             int y2 = std::min(y1 + 1, alto - 1);
             
-            // Calcular los pesos para la interpolación
             float dx = origX - x1;
             float dy = origY - y1;
 
-            // Interpolar para cada canal
             for (int c = 0; c < canales; c++) {
                 float valor = 
                     pixeles[y1][x1][c] * (1 - dx) * (1 - dy) +
@@ -174,7 +197,6 @@ void Imagen::escalarImagen(float factor) {
         }
     }
 
-    // Liberar memoria antigua si no estamos usando el allocador
     if (!allocador) {
         for (int y = 0; y < alto; y++) {
             for (int x = 0; x < ancho; x++) {
@@ -185,10 +207,23 @@ void Imagen::escalarImagen(float factor) {
         delete[] pixeles;
     }
 
-    // Actualizar los atributos de la imagen
     pixeles = nuevosPixeles;
     ancho = nuevoAncho;
     alto = nuevoAlto;
+
+    auto fin = high_resolution_clock::now();
+    getrusage(RUSAGE_SELF, &usage_after);
+    struct mallinfo2 mem_after = mallinfo2();
+
+    auto duracion = duration_cast<milliseconds>(fin - inicio).count();
+    cout << "\n[INFO] Escalado de imagen (factor " << factor << "):" << endl;
+    cout << "  Tiempo de procesamiento: " << duracion << " ms" << endl;
+    cout << "  Memoria utilizada: " << (mem_after.uordblks - mem_before.uordblks) / 1024.0 << " KB" << endl;
+    cout << "  CPU User: " << (usage_after.ru_utime.tv_sec - usage_before.ru_utime.tv_sec) * 1000.0 +
+            (usage_after.ru_utime.tv_usec - usage_before.ru_utime.tv_usec) / 1000.0 << " ms" << endl;
+    cout << "  CPU System: " << (usage_after.ru_stime.tv_sec - usage_before.ru_stime.tv_sec) * 1000.0 +
+            (usage_after.ru_stime.tv_usec - usage_before.ru_stime.tv_usec) / 1000.0 << " ms" << endl;
+    cout << "  Nuevas dimensiones: " << ancho << "x" << alto << endl;
 }
 
 void Imagen::guardarImagen(const std::string& nombreArchivo) const {

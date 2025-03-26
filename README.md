@@ -81,7 +81,53 @@ Original Image (4x4)     Scaled Image (8x8)
 
 Where each new pixel (P') is calculated using the bilinear interpolation formula.
 
-## 🔧 Project Structure
+### Performance Measurements
+
+The system includes comprehensive performance monitoring for both memory allocation modes:
+
+#### Metrics Measured
+1. **Processing Time**:
+   - Measured using `std::chrono::high_resolution_clock`
+   - Reported in milliseconds
+   - Includes both computation and memory allocation time
+
+2. **Memory Usage**:
+   - Measured using `mallinfo2()` for conventional allocation
+   - Tracks memory allocation and deallocation
+   - Reported in kilobytes
+
+3. **CPU Usage**:
+   - User time: CPU time spent in user code
+   - System time: CPU time spent in system calls
+   - Measured using `getrusage()`
+   - Reported in milliseconds
+
+#### Example Output
+```
+[INFO] Escalado de imagen (factor 2.0):
+  Tiempo de procesamiento: 150 ms
+  Memoria utilizada: 2048 KB
+  CPU User: 145 ms
+  CPU System: 5 ms
+  Nuevas dimensiones: 800x600
+```
+
+#### Performance Comparison
+The system allows direct comparison between Buddy System and conventional allocation:
+
+1. **Memory Allocation**:
+   - Buddy System: More efficient for large allocations
+   - Conventional: Better for small, frequent allocations
+
+2. **Processing Time**:
+   - Buddy System: Faster for large images due to optimized allocation
+   - Conventional: More predictable performance across different image sizes
+
+3. **CPU Usage**:
+   - Buddy System: Lower system time due to custom allocation
+   - Conventional: Higher system time due to OS memory management
+
+## �� Project Structure
 ```
 image-processing-system/
 │
