@@ -14,6 +14,12 @@ This project is a **C++ image processing application** that supports two modes o
 - Store the image as a 3D matrix: `pixels[height][width][channels]`
 - Display basic image info (dimensions, color channels)
 
+### 📌 Part 3: Scaling an Image
+- Allow the user to enter the scaling factor (greater or less than 1.0).
+- Use bilinear interpolation to resize the image.
+- Maintain image aspect ratio during scaling.
+- Display information about the new image size after the operation.
+
 ### 📌 Part 4: Memory Management with Buddy System
 - Implemented a simplified **Buddy Allocator** for memory allocation
 - Toggle between **Buddy System** and **new/delete** with a command-line flag
