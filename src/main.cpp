@@ -10,14 +10,15 @@ using namespace std::chrono;
 namespace fs = std::filesystem;
 
 void mostrarUso(const char* nombrePrograma) {
-    cout << "Uso: " << nombrePrograma << " <imagen_entrada> <imagen_salida> <operacion> <parametros> <-buddy | -no-buddy>" << endl;
+    cout << "Uso: " << nombrePrograma << " <imagen_entrada> <imagen_salida> <operacion> [<parametros>] <-buddy | -no-buddy>" << endl;
     cout << "Operaciones disponibles:" << endl;
     cout << "  invertir              - Invierte los colores de la imagen" << endl;
     cout << "  escalar <factor>      - Escala la imagen por el factor especificado (ej: 2.0 para duplicar)" << endl;
+    cout << "  rotar <angulo>        - Rota la imagen en su centro por el ángulo especificado en grados" << endl;
     cout << "Ejemplos:" << endl;
-    cout << "  " << nombrePrograma << " test/testImg/test.jpg output/salida_invertida.png invertir -buddy" << endl;
-    cout << "  " << nombrePrograma << " test/testImg/test.jpg output/salida_2x.png escalar 2.0 -buddy" << endl;
-    cout << "  " << nombrePrograma << " test/testImg/test.jpg output/salida_mitad.png escalar 0.5 -no-buddy" << endl;
+    cout << "  " << nombrePrograma << " entrada.jpg salida_invertida.png invertir -buddy" << endl;
+    cout << "  " << nombrePrograma << " entrada.jpg salida_2x.png escalar 2.0 -buddy" << endl;
+    cout << "  " << nombrePrograma << " entrada.jpg salida_rotada.png rotar 45 -no-buddy" << endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -32,13 +33,12 @@ int main(int argc, char* argv[]) {
     string operacion = argv[3];
     string modo;
     float factorEscala = 1.0f;
+    double angulo = 0.0;
 
-    // Verificar que la carpeta output existe
     if (!fs::exists("output")) {
         fs::create_directory("output");
     }
 
-    // Determinar el modo y los parámetros según la operación
     if (operacion == "invertir") {
         if (argc != 5) {
             cerr << "Error: Número incorrecto de argumentos para invertir." << endl;
@@ -63,8 +63,21 @@ int main(int argc, char* argv[]) {
             return 1;
         }
         modo = argv[5];
+    } else if (operacion == "rotar") {
+        if (argc != 6) {
+            cerr << "Error: Número incorrecto de argumentos para rotar." << endl;
+            mostrarUso(argv[0]);
+            return 1;
+        }
+        try {
+            angulo = stod(argv[4]);
+        } catch (const exception& e) {
+            cerr << "Error: Ángulo inválido." << endl;
+            return 1;
+        }
+        modo = argv[5];
     } else {
-        cerr << "Error: Operación no válida. Use 'invertir' o 'escalar'." << endl;
+        cerr << "Error: Operación no válida. Use 'invertir', 'escalar' o 'rotar'." << endl;
         mostrarUso(argv[0]);
         return 1;
     }
@@ -85,37 +98,40 @@ int main(int argc, char* argv[]) {
     if (usarBuddy) {
         cout << "[INFO] Modo seleccionado: Buddy System" << endl;
         BuddyAllocator allocator(128 * 1024 * 1024); // 128 MB
-
         Imagen imagen(rutaEntrada, &allocator);
-
         if (!imagen.cargar()) return 1;
         imagen.mostrarInformacion();
-        
+
         if (operacion == "invertir") {
             cout << "[INFO] Aplicando inversión de colores..." << endl;
             imagen.invertirColores();
-        } else { // escalar
+        } else if (operacion == "escalar") {
             cout << "[INFO] Aplicando escalado con factor " << factorEscala << "..." << endl;
             imagen.escalarImagen(factorEscala);
+        } else if (operacion == "rotar") {
+            cout << "[INFO] Aplicando rotación de " << angulo << " grados..." << endl;
+            imagen.rotarImagen(angulo);
         }
         
-        imagen.guardarImagen(rutaSalida);             
+        imagen.guardarImagen(rutaSalida);
     } else {
         cout << "[INFO] Modo seleccionado: Convencional (new/delete)" << endl;
         Imagen imagen(rutaEntrada);
-
         if (!imagen.cargar()) return 1;
         imagen.mostrarInformacion();
-        
+
         if (operacion == "invertir") {
             cout << "[INFO] Aplicando inversión de colores..." << endl;
             imagen.invertirColores();
-        } else { // escalar
+        } else if (operacion == "escalar") {
             cout << "[INFO] Aplicando escalado con factor " << factorEscala << "..." << endl;
             imagen.escalarImagen(factorEscala);
+        } else if (operacion == "rotar") {
+            cout << "[INFO] Aplicando rotación de " << angulo << " grados..." << endl;
+            imagen.rotarImagen(angulo);
         }
         
-        imagen.guardarImagen(rutaSalida);             
+        imagen.guardarImagen(rutaSalida);
     }
 
     auto fin = high_resolution_clock::now();
