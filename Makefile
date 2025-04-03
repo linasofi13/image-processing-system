@@ -10,7 +10,7 @@ BUILD_DIR = build
 OUTPUT_DIR = output
 
 # Imagen de prueba por defecto
-TEST_IMG = test/testImg/test.jpg
+TEST_IMG = test/testImg/test.png
 
 # Argumentos por defecto para diferentes operaciones
 ARGS_INVERTIR = $(TEST_IMG) $(OUTPUT_DIR)/salida_invertida.png invertir -buddy

@@ -315,13 +315,17 @@ void Imagen::rotarImagen(double angulo, unsigned char fillColor /*= 0*/) {
                 origY >= 0.0 && origY < (h - 1)) 
             {
                 // Bilinear
-                int x1 = static_cast<int>(origX);
-                int y1 = static_cast<int>(origY);
+                int x1 = static_cast<int>(floor(origX));
+                int y1 = static_cast<int>(floor(origY));
                 int x2 = x1 + 1;
                 int y2 = y1 + 1;
+                if (x2>=w) x2=w-1;
+                if (y2>=h) y2=h-1;
 
                 double fx = origX - x1;
                 double fy = origY - y1;
+                double fx1 = 1.0 - fx;
+                double fy1 = 1.0 - fy;
 
                 for (int c = 0; c < canales; c++) {
                     double p00 = pixeles[y1][x1][c];
@@ -329,10 +333,8 @@ void Imagen::rotarImagen(double angulo, unsigned char fillColor /*= 0*/) {
                     double p01 = pixeles[y2][x1][c];
                     double p11 = pixeles[y2][x2][c];
 
-                    double interp = (1 - fx)*(1 - fy)*p00 +
-                                    (    fx)*(1 - fy)*p10 +
-                                    (1 - fx)*(    fy)*p01 +
-                                    (    fx)*(    fy)*p11;
+                    double interp = (fx1 * fy1 * p00) + (fx * fy1 * p10) +
+                    (fx1 * fy * p01) + (fx * fy * p11);
 
                     nuevosPixeles[ny][nx][c] = static_cast<unsigned char>(std::round(interp));
                 }
