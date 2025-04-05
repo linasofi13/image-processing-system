@@ -10,12 +10,13 @@ BUILD_DIR = build
 OUTPUT_DIR = output
 
 # Imagen de prueba por defecto
-TEST_IMG = test/testImg/test.jpg
+TEST_IMG = test/testImg/test.png
 
 # Argumentos por defecto para diferentes operaciones
 ARGS_INVERTIR = $(TEST_IMG) $(OUTPUT_DIR)/salida_invertida.png invertir -buddy
 ARGS_ESCALAR_2X = $(TEST_IMG) $(OUTPUT_DIR)/salida_2x.png escalar 2.0 -buddy
 ARGS_ESCALAR_MITAD = $(TEST_IMG) $(OUTPUT_DIR)/salida_mitad.png escalar 0.5 -buddy
+ARGS_ROTAR = $(TEST_IMG) $(OUTPUT_DIR)/salida_rotada.png rotar 45 -buddy
 
 # Puedes pasar argumentos personalizados desde línea de comandos con ARGS=
 ARGS ?= $(ARGS_INVERTIR)
@@ -42,6 +43,9 @@ escalar_2x: $(TARGET)
 
 escalar_mitad: $(TARGET)
 	./$(TARGET) $(ARGS_ESCALAR_MITAD)
+
+rotar: $(TARGET)
+	./$(TARGET) $(ARGS_ROTAR)
 
 # Objetivo genérico para ejecutar con argumentos personalizados
 run: $(TARGET)
