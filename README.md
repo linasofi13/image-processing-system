@@ -1,4 +1,4 @@
-# 🖼️ Image Processing System
+## 🖼️ Image Processing System
 
 This project is a **C++ image processing application** that supports two modes of memory management:
 
@@ -7,37 +7,51 @@ This project is a **C++ image processing application** that supports two modes o
 
 ---
 
-## Features Implemented (in Progress)
+### Features Implemented
 
-### 📌 Part 1: Image Loading
+#### 📌 Part 1: Image Loading
 - Load an image from the command line (JPG, PNG, BMP, etc.)
 - Store the image as a 3D matrix: `pixels[height][width][channels]`
 - Display basic image info (dimensions, color channels)
 
-### 📌 Part 3: Scaling an Image
+#### 📌 Part 2: Rotate an Image in the Center
+- Allow the user to enter the rotation angle.
+- Implement a rotation algorithm using bilinear interpolation to preserve image quality.
+- The rotation must be performed on the center of the image.
+- If the rotated image generates empty spaces, they should be filled by a constant value (e.g., black or white).
+
+#### 📌 Part 3: Scaling an Image
 - Allow the user to enter the scaling factor (greater or less than 1.0).
 - Use bilinear interpolation to resize the image.
 - Maintain image aspect ratio during scaling.
 - Display information about the new image size after the operation.
 
-### 📌 Part 4: Memory Management with Buddy System
+#### 📌 Part 4: Memory Management with Buddy System
 - Implemented a simplified **Buddy Allocator** for memory allocation
 - Toggle between **Buddy System** and **new/delete** with a command-line flag
 - Compare performance and allocation behavior
 - Print `offsets` when Buddy System is used (for debugging)
 
-### 📌 Part 5: Performance and Memory Consumption Comparison
+#### 📌 Part 5: Performance and Memory Consumption Comparison
 - Measure processing time for rotation and scaling operations using `std::chrono`.
 - Measure memory consumption using `mallinfo()` or `getrusage()` to determine the size of reserved memory.
 - Display on screen a direct comparison between performance and memory consumption in the two allocation modes.
 
-## 🔬 Technical Details
+#### 📌 Part 6: Data Output
+The program must present a clear output with the following data:
+- Original and final dimensions of the image.
+- Rotation angle applied.
+- Processing time in milliseconds.
+- Memory consumption in both modes (Buddy System and conventional).
+- Performance difference between both modes.
 
-### Image Scaling Implementation
+### 🔬 Technical Details
+
+#### Image Scaling Implementation
 
 The image scaling function uses **bilinear interpolation** to maintain image quality during resizing. Here's how it works:
 
-#### Mathematical Concept
+##### Mathematical Concept
 For a scaling factor $s$, the new dimensions are calculated as:
 ```math
 \text{new\_width} = \lfloor \text{width} \times s \rfloor \\
@@ -59,7 +73,7 @@ Where:
 - $P_{00}, P_{10}, P_{01}, P_{11}$ are the four neighboring pixels
 - $dx, dy$ are the fractional parts of the original coordinates
 
-#### Implementation Details
+##### Implementation Details
 1. **Memory Allocation**:
    - Creates a new 3D matrix for the scaled image
    - Supports both Buddy System and conventional memory allocation
@@ -74,7 +88,7 @@ Where:
    - Uses `std::min` to prevent accessing pixels outside image boundaries
    - Maintains color accuracy at image edges
 
-#### Example
+##### Example
 For a scaling factor of 2.0:
 ```
 Original Image (4x4)     Scaled Image (8x8)
@@ -86,11 +100,11 @@ Original Image (4x4)     Scaled Image (8x8)
 
 Where each new pixel (P') is calculated using the bilinear interpolation formula.
 
-### Performance Measurements
+#### Performance Measurements
 
 The system includes comprehensive performance monitoring for both memory allocation modes:
 
-#### Metrics Measured
+##### Metrics Measured
 1. **Processing Time**:
    - Measured using `std::chrono::high_resolution_clock`
    - Reported in milliseconds
@@ -107,7 +121,7 @@ The system includes comprehensive performance monitoring for both memory allocat
    - Measured using `getrusage()`
    - Reported in milliseconds
 
-#### Example Output
+##### Example Output
 ```
 [INFO] Escalado de imagen (factor 2.0):
   Tiempo de procesamiento: 150 ms
@@ -117,7 +131,7 @@ The system includes comprehensive performance monitoring for both memory allocat
   Nuevas dimensiones: 800x600
 ```
 
-#### Performance Comparison
+##### Performance Comparison
 The system allows direct comparison between Buddy System and conventional allocation:
 
 1. **Memory Allocation**:
@@ -148,7 +162,10 @@ image-processing-system/
 │
 ├── test/                 # Test images
 │   └── testImg/
-│       └── test.jpg
+│       ├── image.png
+│       ├── image2.png
+│       ├── test.png
+│       └── test2.jpg
 │
 ├── build/                # Compiled executable
 │
@@ -168,14 +185,14 @@ make clean        # Clean all built files and outputs
 
 ### Basic Operations
 ```bash
-# Invert image colors
-make invertir
-
 # Scale image to double size
 make escalar_2x
 
 # Scale image to half size
 make escalar_mitad
+
+# Rotate image by 45 degrees
+make rotar
 
 # Run all example operations
 make test_all
@@ -183,54 +200,50 @@ make test_all
 
 ### Custom Operations
 ```bash
-# Custom inversion
-make run ARGS="input.jpg output/result.png invertir -buddy"
-
 # Custom scaling (e.g., scale by 1.5)
 make run ARGS="input.jpg output/result.png escalar 1.5 -buddy"
+
+# Custom rotation (e.g., rotate by 30 degrees)
+make run ARGS="input.jpg output/result.png rotar 30 -buddy"
 ```
 
 ### Command Line Format
 ```bash
-./build/image-processing-system <input_image> <output_image> <operation> [scale_factor] <memory_mode>
+./build/image-processing-system <input_image> <output_image> <operation> [parameters] <memory_mode>
 
 # Operations:
-- invertir              # Invert colors
 - escalar <factor>      # Scale image by factor
+- rotar <angle>         # Rotate image by angle in degrees
 
 # Memory Modes:
-- -buddy               # Use Buddy System allocator
-- -no-buddy            # Use conventional allocation
+- -buddy               # Use Buddy System allocator (will also simulate and compare with conventional)
+- -no-buddy            # Use conventional allocation only
 ```
 
 ## 🔍 Output
 - All processed images are saved in the `output/` directory
 - The program displays:
   - Image dimensions and channels
-  - Processing time
+  - Operation parameters (scale factor or rotation angle)
+  - Processing time comparison between memory allocation methods
   - Output file location
-  - Memory allocation mode used
 
 ## 💡 Examples
-1. **Invert Colors**:
-   ```bash
-   make invertir
-   # Output: output/salida_invertida.png
-   ```
-
-2. **Double Size**:
+1. **Scale Image**:
    ```bash
    make escalar_2x
    # Output: output/salida_2x.png
    ```
 
-3. **Half Size**:
+2. **Rotate Image**:
    ```bash
-   make escalar_mitad
-   # Output: output/salida_mitad.png
+   make rotar
+   # Output: output/salida_rotada.png
    ```
 
-4. **Custom Scale**:
+3. **Compare Memory Systems**:
    ```bash
-   make run ARGS="test/testImg/test.jpg output/custom_scale.png escalar 1.5 -buddy"
+   make run ARGS="test/testImg/test.png output/comparison.png escalar 1.5 -buddy"
+   # This will process the image with both Buddy System and conventional allocation
+   # and display a performance comparison
    ```
