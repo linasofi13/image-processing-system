@@ -25,7 +25,7 @@ This project is a **C++ image processing application** that supports two modes o
   - [Command Line Format](#command-line-format)
 - [🔍 Output](#-output)
 - [💡 Examples](#-examples)
-- [Contributors](#-contributors)
+- [Contributors](#contributors)
 ---
 
 ### Features Implemented
