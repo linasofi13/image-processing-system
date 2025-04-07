@@ -5,10 +5,26 @@ This project is a **C++ image processing application** that supports two modes o
 - **Conventional mode** using `new` / `delete`
 -  **Buddy System** for custom memory allocation
 
-![image](https://github.com/user-attachments/assets/d866809f-3584-4145-82c5-48d597afd1e8)
-![image](https://github.com/user-attachments/assets/e7bbb1e1-a2d7-4db2-b3f2-af4be1414ac2)
-![image](https://github.com/user-attachments/assets/5f73199d-bbac-4b2a-ae03-33b8bda30aae)
-
+---
+### Table of Contents
+- [Features Implemented](#-features-implemented)
+  - [📌 Part 1: Image Loading](#-part-1-image-loading)
+  - [📌 Part 2: Rotate an Image in the Center](#-part-2-rotate-an-image-in-the-center)
+  - [📌 Part 3: Scaling an Image](#-part-3-scaling-an-image)
+  - [📌 Part 4: Memory Management with Buddy System](#-part-4-memory-management-with-buddy-system)
+  - [📌 Part 5: Performance and Memory Consumption Comparison](#-part-5-performance-and-memory-consumption-comparison)
+  - [📌 Part 6: Data Output](#-part-6-data-output)
+- [🔬 Technical Details](#-technical-details)
+  - [Image Scaling Implementation](#image-scaling-implementation)
+  - [Performance Measurements](#performance-measurements)
+- [Project Structure](#project-structure)
+- [📝 Usage](#-usage)
+  - [Building the Project](#building-the-project)
+  - [Basic Operations](#basic-operations)
+  - [Custom Operations](#custom-operations)
+  - [Command Line Format](#command-line-format)
+- [🔍 Output](#-output)
+- [💡 Examples](#-examples)
 ---
 
 ### Features Implemented
@@ -150,7 +166,7 @@ The system allows direct comparison between Buddy System and conventional alloca
    - Buddy System: Lower system time due to custom allocation
    - Conventional: Higher system time due to OS memory management
 
-## Project Structure
+### Project Structure
 ```
 image-processing-system/
 │
@@ -178,16 +194,21 @@ image-processing-system/
 │
 └── Makefile
 ```
+### 🎞️ Screenshots
 
-## 📝 Usage
+![image](https://github.com/user-attachments/assets/d866809f-3584-4145-82c5-48d597afd1e8)
+![image](https://github.com/user-attachments/assets/e7bbb1e1-a2d7-4db2-b3f2-af4be1414ac2)
+![image](https://github.com/user-attachments/assets/5f73199d-bbac-4b2a-ae03-33b8bda30aae)
 
-### Building the Project
+### 📝 Usage
+
+#### Building the Project
 ```bash
 make all          # Build the project and create necessary directories
 make clean        # Clean all built files and outputs
 ```
 
-### Basic Operations
+#### Basic Operations
 ```bash
 # Scale image to double size
 make escalar_2x
@@ -202,7 +223,7 @@ make rotar
 make test_all
 ```
 
-### Custom Operations
+#### Custom Operations
 ```bash
 # Custom scaling (e.g., scale by 1.5)
 make run ARGS="input.jpg output/result.png escalar 1.5 -buddy"
@@ -211,7 +232,7 @@ make run ARGS="input.jpg output/result.png escalar 1.5 -buddy"
 make run ARGS="input.jpg output/result.png rotar 30 -buddy"
 ```
 
-### Command Line Format
+#### Command Line Format
 ```bash
 ./build/image-processing-system <input_image> <output_image> <operation> [parameters] <memory_mode>
 
@@ -224,7 +245,7 @@ make run ARGS="input.jpg output/result.png rotar 30 -buddy"
 - -no-buddy            # Use conventional allocation only
 ```
 
-## 🔍 Output
+### 🔍 Output
 - All processed images are saved in the `output/` directory
 - The program displays:
   - Image dimensions and channels
@@ -232,7 +253,7 @@ make run ARGS="input.jpg output/result.png rotar 30 -buddy"
   - Processing time comparison between memory allocation methods
   - Output file location
 
-## 💡 Examples
+### 💡 Examples
 1. **Scale Image**:
    ```bash
    make escalar_2x
