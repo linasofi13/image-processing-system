@@ -5,6 +5,10 @@ This project is a **C++ image processing application** that supports two modes o
 - **Conventional mode** using `new` / `delete`
 -  **Buddy System** for custom memory allocation
 
+![image](https://github.com/user-attachments/assets/d866809f-3584-4145-82c5-48d597afd1e8)
+![image](https://github.com/user-attachments/assets/e7bbb1e1-a2d7-4db2-b3f2-af4be1414ac2)
+![image](https://github.com/user-attachments/assets/5f73199d-bbac-4b2a-ae03-33b8bda30aae)
+
 ---
 
 ### Features Implemented
