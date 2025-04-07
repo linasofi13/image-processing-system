@@ -106,34 +106,6 @@ void Imagen::mostrarInformacion() const {
     cout << "Canales: " << canales << endl;
 }
 
-void Imagen::invertirColores() {
-    auto inicio = high_resolution_clock::now();
-    struct rusage usage_before, usage_after;
-    getrusage(RUSAGE_SELF, &usage_before);
-    struct mallinfo2 mem_before = mallinfo2();
-
-    for (int y = 0; y < alto; y++) {
-        for (int x = 0; x < ancho; x++) {
-            for (int c = 0; c < canales; c++) {
-                pixeles[y][x][c] = 255 - pixeles[y][x][c];
-            }
-        }
-    }
-
-    auto fin = high_resolution_clock::now();
-    getrusage(RUSAGE_SELF, &usage_after);
-    struct mallinfo2 mem_after = mallinfo2();
-
-    auto duracion = duration_cast<milliseconds>(fin - inicio).count();
-    cout << "\n[INFO] Inversión de colores:" << endl;
-    cout << "  Tiempo de procesamiento: " << duracion << " ms" << endl;
-    cout << "  Memoria utilizada: " << (mem_after.uordblks - mem_before.uordblks) / 1024.0 << " KB" << endl;
-    cout << "  CPU User: " << (usage_after.ru_utime.tv_sec - usage_before.ru_utime.tv_sec) * 1000.0 +
-            (usage_after.ru_utime.tv_usec - usage_before.ru_utime.tv_usec) / 1000.0 << " ms" << endl;
-    cout << "  CPU System: " << (usage_after.ru_stime.tv_sec - usage_before.ru_stime.tv_sec) * 1000.0 +
-            (usage_after.ru_stime.tv_usec - usage_before.ru_stime.tv_usec) / 1000.0 << " ms" << endl;
-}
-
 void Imagen::escalarImagen(float factor) {
     auto inicio = high_resolution_clock::now();
     struct rusage usage_before, usage_after;
