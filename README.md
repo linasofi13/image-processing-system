@@ -25,6 +25,7 @@ This project is a **C++ image processing application** that supports two modes o
   - [Command Line Format](#command-line-format)
 - [🔍 Output](#-output)
 - [💡 Examples](#-examples)
+- [Contributors](#-contributors)
 ---
 
 ### Features Implemented
@@ -272,3 +273,8 @@ make run ARGS="input.jpg output/result.png rotar 30 -buddy"
    # This will process the image with both Buddy System and conventional allocation
    # and display a performance comparison
    ```
+### Contributors
+
+<a href="https://github.com/linasofi13/image-processing-system/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=linasofi13/image-processing-system" />
+</a>
