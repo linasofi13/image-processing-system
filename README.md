@@ -17,6 +17,7 @@ This project is a **C++ image processing application** that supports two modes o
 - [🔬 Technical Details](#-technical-details)
   - [Image Scaling Implementation](#image-scaling-implementation)
   - [Performance Measurements](#performance-measurements)
+  - [Concurrency with OpenMP](#concurrency-with-openmp)
 - [Project Structure](#project-structure)
 - [📝 Usage](#-usage)
   - [Building the Project](#building-the-project)
@@ -166,6 +167,23 @@ The system allows direct comparison between Buddy System and conventional alloca
 3. **CPU Usage**:
    - Buddy System: Lower system time due to custom allocation
    - Conventional: Higher system time due to OS memory management
+
+#### Concurrency with OpenMP
+
+To improve performance, particularly for computationally intensive tasks like image scaling, the project utilizes **OpenMP** for parallel processing.
+
+- **Targeted Parallelization**: The primary loop within the `escalarImagen` function (responsible for bilinear interpolation) is parallelized using the `#pragma omp parallel for` directive.
+- **Mechanism**: This directive instructs the compiler to distribute the iterations of the outer loop (iterating over image rows) across multiple available processor cores. Each thread processes a subset of the rows independently.
+- **Benefit**: This significantly reduces the execution time for scaling large images by leveraging multi-core CPU architectures. The speedup is most noticeable on systems with multiple cores.
+
+##### Benchmark Example
+
+A simple benchmark scaling the `test/testImg/test.png` image (540x540) by a factor of 2.0 using conventional memory allocation (`-no-buddy`) shows the following processing times for the scaling operation itself:
+
+- **Multi-threaded (Default OpenMP)**: ~69 ms
+- **Single-threaded (`OMP_NUM_THREADS=1`)**: ~84 ms
+
+*Note: Actual times may vary based on the system's CPU and current load.*
 
 ### Project Structure
 ```
