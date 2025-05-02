@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
         cout << "------------------------" << endl;
         cout << "[INFO] Procesamiento con Buddy System:" << endl;
 
-        BuddyAllocator allocator(128 * 1024 * 1024); // 128 MB
+        BuddyAllocator allocator(512 * 1024 * 1024);
         Imagen imagenBuddy(rutaEntrada, &allocator);
         if (!imagenBuddy.cargar()) return 1;
         imagenBuddy.mostrarInformacion();
