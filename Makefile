@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++17 -Iinclude
+CXXFLAGS = -Wall -std=c++17 -Iinclude -fopenmp
 
 SRC = src/main.cpp src/imagen.cpp src/buddy_allocator.cpp src/stb_wrapper.cpp
 OBJ = $(SRC:.cpp=.o)
@@ -26,7 +26,7 @@ directories:
 	mkdir -p $(BUILD_DIR) $(OUTPUT_DIR)
 
 $(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJ) -fopenmp
 
 clean:
 	rm -f $(OBJ)

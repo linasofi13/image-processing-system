@@ -10,6 +10,7 @@
 #include <malloc.h>
 #include <cmath>
 #include <cstdlib>
+#include <omp.h>
 
 
 using namespace std;
@@ -147,6 +148,7 @@ void Imagen::escalarImagen(float factor) {
     }
 
     // Realizar el escalado usando interpolación bilineal
+    #pragma omp parallel for
     for (int y = 0; y < nuevoAlto; y++) {
         for (int x = 0; x < nuevoAncho; x++) {
             float origX = x / factor;
@@ -271,6 +273,7 @@ void Imagen::rotarImagen(double angulo, unsigned char fillColor /*= 0*/) {
     double cyn = nuevoAlto  / 2.0;
 
     // 4) Para cada pixel (x, y) del nuevo lienzo, hallar (origX, origY)
+    #pragma omp parallel for
     for (int ny = 0; ny < nuevoAlto; ny++) {
         for (int nx = 0; nx < nuevoAncho; nx++) {
             // coordenadas relativas al centro del nuevo lienzo
